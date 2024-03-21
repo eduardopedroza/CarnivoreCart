@@ -16,7 +16,7 @@ const { BadRequestError } = require("../expressError");
 function createSqlSetClause(dataToUpdate, columnMapping) {
   // Check if dataToUpdate is empty
   if (Object.keys(dataToUpdate).length === 0) {
-    throw new Error("No data provided");
+    throw new BadRequestError("No data provided");
   }
 
   // Convert dataToUpdate to SQL SET clause format
