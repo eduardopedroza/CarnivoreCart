@@ -85,6 +85,10 @@ class User {
     throw new UnauthorizedError("Invalid username/password");
   }
 
+  /** Find all users
+   *
+   * Returns [{ username, firstName, lastName, email, shippingAddress }]
+   */
   static async findAll() {
     const result = await db.query(
       `SELECT username,
@@ -99,6 +103,12 @@ class User {
     return result.rows;
   }
 
+  /** Given a username, return user
+   *
+   * Returns { username, firstName, lastName, email, shippingAddress }
+   *
+   * Throws NotFoundError if not found
+   */
   static async get(username) {
     const result = await db.query(
       `SELECT username,
@@ -118,6 +128,14 @@ class User {
     return user;
   }
 
+  /** Update a user with 'data'
+   *
+   * Data can include: { password, firstName, lastName, shippingAddress }
+   *
+   * Returns { username, firstName, lastName, email, shippingAddress }
+   *
+   * Throws NotFoundError if user is not found
+   */
   static async update(username, data) {
     if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
@@ -149,6 +167,10 @@ class User {
     return user;
   }
 
+  /** Delete given user from database; returns undefined
+   *
+   * Throws NotFoundError if user not found
+   */
   static async remove(username) {
     let result = await db.query(
       `DELETE 
