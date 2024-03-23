@@ -37,12 +37,30 @@ describe("register", function () {
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
   });
 
-  test("bad request with duplicate user", async function () {
+  test("bad request with duplicate username", async function () {
     try {
       await User.register({
         ...newUser,
         password: "password",
       });
+      newUser.email = "diffemail@gmail.com";
+      await User.register({
+        ...newUser,
+        password: "password",
+      });
+      fail();
+    } catch (e) {
+      expect(e instanceof BadRequestError).toBeTruthy();
+    }
+  });
+
+  test("bad request with duplicate email", async function () {
+    try {
+      await User.register({
+        ...newUser,
+        password: "password",
+      });
+      newUser.username = "new2";
       await User.register({
         ...newUser,
         password: "password",
