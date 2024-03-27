@@ -9,7 +9,7 @@ class Seller {
    * data should be {firstName, lastName, username, email, password
    *                 shippingAddress, companyName, contactInfo}
    *
-   * Returns { seller_id, companyName, contactInfo, rating, salesCount}
+   * Returns { companyName, contactInfo }
    *
    * Throws BadRequestError if username or companyName already in database
    */
