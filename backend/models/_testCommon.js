@@ -39,9 +39,9 @@ async function commonBeforeAll() {
   // Insert products
   const productInsertResult = await db.query(
     `
-    INSERT INTO products(seller_id, name, description, price, meat_type, cut_type, weight, image_url)
-    VALUES ($1, 'grass-fed ribeye', 'juicy steak', 7.69, 'beef', 'rib eye', 1000, 'https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml'),
-           ($2, 'chicken wings', 'very tasty chicken wings', 2.39, 'chicken', 'chicken wings', 500, 'https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml')
+    INSERT INTO products(seller_id, name, description, price_in_cents, meat_type, cut_type, weight_in_grams, image_url)
+    VALUES ($1, 'grass-fed ribeye', 'juicy steak', 769, 'beef', 'rib eye', 100, 'https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml'),
+           ($2, 'chicken wings', 'very tasty chicken wings', 239, 'chicken', 'chicken wings', 500, 'https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml')
     RETURNING product_id`,
     [sellerIdsArray[0], sellerIdsArray[1]]
   );
