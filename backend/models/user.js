@@ -106,7 +106,7 @@ class User {
               email,
               shipping_address AS "shippingAddress"
        FROM users
-       ORDER BY username`
+       WHERE deleted = FALSE`
     );
 
     return result.rows;
@@ -116,7 +116,7 @@ class User {
    *
    * Returns { username, firstName, lastName, email, shippingAddress }
    *
-   * Throws NotFoundError if not found
+   * Throws NotFoundError if not found or set to deleted
    */
   static async get(username) {
     const result = await db.query(
@@ -126,7 +126,7 @@ class User {
               email,
               shipping_address AS "shippingAddress"
        FROM users
-       WHERE username = $1`,
+       WHERE username = $1 AND deleted = FALSE`,
       [username]
     );
 
@@ -141,7 +141,7 @@ class User {
    *
    * Returns { username, firstName, lastName, email, shippingAddress }
    *
-   * Throws NotFoundError if not found
+   * Throws NotFoundError if not found or set to deleted
    */
   static async getUserWithId(userId) {
     const result = await db.query(
@@ -151,7 +151,7 @@ class User {
               email,
               shipping_address AS "shippingAddress"
        FROM users
-       WHERE user_id = $1`,
+       WHERE user_id = $1 AND deleted = FALSE`,
       [userId]
     );
 
@@ -168,7 +168,7 @@ class User {
    *
    * Returns { username, firstName, lastName, email, shippingAddress }
    *
-   * Throws NotFoundError if user is not found
+   * Throws NotFoundError if user is not found or set to deleted
    */
   static async update(username, data) {
     if (data.password) {
@@ -185,7 +185,7 @@ class User {
 
     const querySql = `UPDATE users
                       SET ${setCols}
-                      WHERE username = ${usernameVarIdx}
+                      WHERE username = ${usernameVarIdx} AND deleted = FALSE
                       RETURNING username,
                                 first_name AS "firstName",
                                 last_name AS "lastName",
