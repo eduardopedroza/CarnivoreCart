@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
+let userIdsArray, productIdsArray;
+
 async function commonBeforeAll() {
   // Clear tables
   await db.query("DELETE FROM orders");
@@ -23,7 +25,7 @@ async function commonBeforeAll() {
     ["user1", hashedPassword1, "user2", hashedPassword2]
   );
 
-  const userIdsArray = userInsertResult.rows.map((row) => row.user_id);
+  userIdsArray = userInsertResult.rows.map((row) => row.user_id);
 
   // Insert sellers
   const sellerInsertResult = await db.query(
@@ -46,7 +48,7 @@ async function commonBeforeAll() {
     [sellerIdsArray[0], sellerIdsArray[1]]
   );
 
-  const productIdsArray = productInsertResult.rows.map((row) => row.product_id);
+  productIdsArray = productInsertResult.rows.map((row) => row.product_id);
 
   // Insert reviews
   await db.query(
@@ -82,4 +84,6 @@ module.exports = {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  getUserIdsArray: () => userIdsArray,
+  getProductIdsArray: () => productIdsArray,
 };
