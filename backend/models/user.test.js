@@ -210,7 +210,7 @@ describe("remove", function () {
   test("works", async function () {
     await User.remove("user1");
     const response = await db.query(
-      "SELECT * FROM users WHERE username = 'user1'"
+      "SELECT * FROM users WHERE username = 'user1' AND deleted = FALSE"
     );
     expect(response.rows.length).toEqual(0);
   });

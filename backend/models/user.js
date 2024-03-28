@@ -137,6 +137,31 @@ class User {
     return user;
   }
 
+  /** Given a userId, return user
+   *
+   * Returns { username, firstName, lastName, email, shippingAddress }
+   *
+   * Throws NotFoundError if not found
+   */
+  static async getUserWithId(userId) {
+    const result = await db.query(
+      `SELECT username,
+              first_name AS "firstName",
+              last_name AS "lastName",
+              email,
+              shipping_address AS "shippingAddress"
+       FROM users
+       WHERE user_id = $1`,
+      [userId]
+    );
+
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user with ID: ${userId}`);
+
+    return user;
+  }
+
   /** Update a user with 'data'
    *
    * Data can include: { password, firstName, lastName, shippingAddress }
@@ -176,22 +201,19 @@ class User {
     return user;
   }
 
-  /** Delete given user from database; returns undefined
+  /** Set given user as deleted; returns undefined
    *
    * Throws NotFoundError if user not found
    */
   static async remove(username) {
-    let result = await db.query(
-      `DELETE 
-       FROM users
-       WHERE username = $1
-       RETURNING username`,
+    const user = await this.get(username);
+
+    await db.query(
+      `UPDATE users
+       SET deleted = TRUE
+       WHERE username = $1`,
       [username]
     );
-
-    const user = result.rows[0];
-
-    if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 }
 
