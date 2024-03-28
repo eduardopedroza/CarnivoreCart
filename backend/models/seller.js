@@ -75,7 +75,7 @@ class Seller {
               rating,
               sales_count AS "salesCount"
        FROM sellers
-       ORDER BY company_name`
+       WHERE deleted = FALSE`
     );
 
     return result.rows;
@@ -85,7 +85,7 @@ class Seller {
    *
    * Returns { companyName, contactInfo, rating, salesCount }
    *
-   * Throws NotFoundError if not found
+   * Throws NotFoundError if not found or set to deleted
    */
   static async get(companyName) {
     const result = await db.query(
@@ -94,7 +94,7 @@ class Seller {
               rating,
               sales_count AS "salesCount"
        FROM sellers
-       WHERE company_name = $1`,
+       WHERE company_name = $1 AND deleted = FALSE`,
       [companyName]
     );
 
@@ -105,13 +105,37 @@ class Seller {
     return seller;
   }
 
+  /** Given a sellerId, return data about seller
+   *
+   * Returns { companyName, contactInfo, rating, salesCount }
+   *
+   * Throws NotFoundError if not found or set to deleted
+   */
+  static async getSellerWithId(sellerId) {
+    const result = await db.query(
+      `SELECT company_name AS "companyName",
+              contact_info AS "contactInfo",
+              rating,
+              sales_count AS "salesCount"
+       FROM sellers
+       WHERE seller_id = $1 AND deleted = FALSE`,
+      [sellerId]
+    );
+
+    const seller = result.rows[0].seller_id;
+
+    if (!seller) throw new NotFoundError(`No seller with Id: ${sellerId}`);
+
+    return seller;
+  }
+
   /** Update seller data with 'data'
    *
    * Data can include: { companyName, contactInfo }
    *
    * Returns { companyName, contactInfo, rating, salesCount }
    *
-   * Throws NotFoundError if seller not found
+   * Throws NotFoundError if seller not found or set to deleted
    */
 
   static async update(sellerId, data) {
@@ -124,7 +148,7 @@ class Seller {
 
     const querySql = `UPDATE sellers
                       SET ${setCols}
-                      WHERE seller_id = ${sellerVarIdx}
+                      WHERE seller_id = ${sellerVarIdx} AND deleted = FALSE
                       RETURNING company_name AS "companyName",
                       contact_info AS "contactInfo",
                       rating,
@@ -146,23 +170,23 @@ class Seller {
    *
    * Throws NotFoundError if seller not found
    *
-   * Removes user from database, cascades to the sellers table due to the foreign key constraint
+   * Sets seller and user as deleted
    */
 
   static async remove(sellerId) {
-    const seller = await db.query(
-      `SELECT *
-       FROM sellers
-       WHERE seller_id = $1`,
+    const seller = await this.getSellerWithId(sellerId);
+
+    await db.query(
+      `UPDATE users
+       SET deleted = TRUE
+       WHERE user_id = $1`,
       [sellerId]
     );
 
-    if (seller.rows.length === 0)
-      throw new NotFoundError(`Seller with ID ${sellerId} not found`);
-
     await db.query(
-      `DELETE FROM users
-        WHERE user_id = $1`,
+      `UPDATE sellers
+       SET deleted = TRUE
+       WHERE seller_id = $1`,
       [sellerId]
     );
   }
@@ -170,17 +194,17 @@ class Seller {
    *
    * Returns { sellerId }
    *
-   * Throws NotFoundError if not found
+   * Throws NotFoundError if not found or set to deleted
    */
   static async getSellerId(companyName) {
     const result = await db.query(
       `SELECT seller_id AS "sellerId"
          from sellers
-         WHERE company_name = $1`,
+         WHERE company_name = $1 AND deleted = FALSE`,
       [companyName]
     );
 
-    const sellerId = result.rows[0];
+    const sellerId = result.rows[0].sellerId;
 
     if (!sellerId) throw new NotFoundError(`No company named: ${companyName}`);
 

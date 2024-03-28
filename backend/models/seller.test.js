@@ -112,7 +112,7 @@ describe("update", function () {
   };
 
   test("works", async function () {
-    const { sellerId } = await Seller.getSellerId("Ribeyes & Co.");
+    const sellerId = await Seller.getSellerId("Ribeyes & Co.");
     const updatedSeller = await Seller.update(sellerId, updateData);
     expect(updatedSeller).toEqual({
       companyName: "Updated Company Name",
@@ -133,7 +133,7 @@ describe("update", function () {
 
   test("bad request if no data", async function () {
     try {
-      const { sellerId } = await Seller.getSellerId("Ribeyes & Co.");
+      const sellerId = await Seller.getSellerId("Ribeyes & Co.");
       await Seller.update(sellerId, {});
       fail();
     } catch (e) {
@@ -144,10 +144,10 @@ describe("update", function () {
 
 describe("remove", function () {
   test("works", async function () {
-    const { sellerId } = await Seller.getSellerId("Ribeyes & Co.");
+    const sellerId = await Seller.getSellerId("Ribeyes & Co.");
     await Seller.remove(sellerId);
     const response = await db.query(
-      `SELECT * FROM sellers WHERE seller_id = $1`,
+      `SELECT * FROM sellers WHERE seller_id = $1 AND deleted = FALSE`,
       [sellerId]
     );
     expect(response.rows.length).toEqual(0);
