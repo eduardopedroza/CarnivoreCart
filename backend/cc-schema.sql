@@ -5,7 +5,8 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
-  shipping_address TEXT
+  shipping_address TEXT,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE products (
@@ -13,11 +14,12 @@ CREATE TABLE products (
   seller_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
   name VARCHAR(100) NOT NULL,
   description TEXT NOT NULL,
-  price DECIMAL(10, 2) NOT NULL,
+  price_in_cents INTEGER NOT NULL,
   meat_type VARCHAR(50) NOT NULL,
   cut_type VARCHAR(50) NOT NULL,
-  weight DECIMAL(10, 2) NOT NULL,
-  image_url TEXT
+  weight_in_grams INTEGER NOT NULL,
+  image_url TEXT,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE orders (
@@ -26,7 +28,8 @@ CREATE TABLE orders (
   product_id INTEGER REFERENCES products(product_id),
   quantity INTEGER NOT NULL,
   order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(20) NOT NULL
+  status VARCHAR(20) NOT NULL,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE reviews (
@@ -35,7 +38,8 @@ CREATE TABLE reviews (
   product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
   comment TEXT,
-  review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sellers (
@@ -43,5 +47,6 @@ CREATE TABLE sellers (
   company_name VARCHAR(100) NOT NULL,
   contact_info TEXT,
   rating DECIMAL(3, 2) CHECK (rating BETWEEN 0 AND 5),
-  sales_count INTEGER DEFAULT 0
+  sales_count INTEGER DEFAULT 0,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
