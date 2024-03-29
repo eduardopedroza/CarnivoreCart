@@ -25,8 +25,7 @@ CREATE TABLE products (
 CREATE TABLE orders (
   order_id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-  product_id INTEGER REFERENCES products(product_id),
-  quantity INTEGER NOT NULL,
+  price_paid_in_cents INTEGER NOT NULL,
   order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(20) NOT NULL,
   deleted BOOLEAN NOT NULL DEFAULT FALSE
@@ -48,5 +47,14 @@ CREATE TABLE sellers (
   contact_info TEXT,
   rating DECIMAL(3, 2) CHECK (rating BETWEEN 0 AND 5),
   sales_count INTEGER DEFAULT 0,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE order_products (
+  order_product_id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+  product_id INTEGER REFERENCES products(product_id),
+  quantity INTEGER NOT NULL,
+  price_in_cents INTEGER NOT NULL,
   deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
