@@ -29,7 +29,8 @@ class Product {
     const productResult = await db.query(
       `INSERT INTO products(seller_id, name, description, price_in_cents, meat_type, cut_type, weight_in_grams, image_url)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING seller_id AS "sellerId", 
+       RETURNING product_id AS "productId",
+                 seller_id AS "sellerId", 
                  name,
                  description,
                  price_in_cents AS "priceInCents",

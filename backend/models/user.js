@@ -55,7 +55,7 @@ class User {
         email,
         shipping_address)
        VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING username, first_name AS "firstName", last_name AS "lastName", email, shipping_address AS "shippingAddress"`,
+       RETURNING user_id AS "userId", username, first_name AS "firstName", last_name AS "lastName", email, shipping_address AS "shippingAddress"`,
       [username, hashedPassword, firstName, lastName, email, shippingAddress]
     );
 

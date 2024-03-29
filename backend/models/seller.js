@@ -55,7 +55,7 @@ class Seller {
     const sellerResult = await db.query(
       `INSERT INTO sellers(seller_id, company_name, contact_info)
        VALUES ($1, $2, $3)
-       RETURNING company_name AS "companyName", contact_info AS "contactInfo"`,
+       RETURNING seller_id AS "sellerId", company_name AS "companyName", contact_info AS "contactInfo"`,
       [userId, companyName, contactInfo]
     );
 
