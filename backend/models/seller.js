@@ -122,7 +122,7 @@ class Seller {
       [sellerId]
     );
 
-    const seller = result.rows[0].seller_id;
+    const seller = result.rows[0];
 
     if (!seller) throw new NotFoundError(`No seller with Id: ${sellerId}`);
 
