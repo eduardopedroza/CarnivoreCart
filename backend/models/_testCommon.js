@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
-let userIdsArray, productIdsArray;
+let userIdsArray, productIdsArray, orderIdsArray;
 
 async function commonBeforeAll() {
   // Clear tables
@@ -59,12 +59,26 @@ async function commonBeforeAll() {
   );
 
   // Insert orders
-  await db.query(
-    `INSERT INTO orders(user_id, product_id, quantity, order_date, status)
-     VALUES ($1, $2, 10, '2024-03-18 09:00:00', 'shipped'),
-            ($3, $4, 5, '2024-03-18 10:00:00', 'delivered')`,
-    [userIdsArray[0], productIdsArray[0], userIdsArray[1], productIdsArray[1]]
+  const orderInserResult = await db.query(
+    `INSERT INTO orders(user_id, price_paid_in_cents, order_date, status)
+     VALUES ($1, 2000, '2024-03-18 09:00:00', 'shipped'),
+            ($2, 2000, '2024-03-18 10:00:00', 'delivered')
+     RETURNING order_id`,
+    [userIdsArray[0], userIdsArray[1]]
   );
+
+  orderIdsArray = orderInserResult.rows.map((row) => row.order_id);
+
+  for (const orderId of orderIdsArray) {
+    for (const productId of productIdsArray) {
+      // Insert a row into the order_products table for each combination of orderId and productId
+      await db.query(
+        `INSERT INTO order_products (order_id, product_id, quantity, price_in_cents)
+         VALUES ($1, $2, $3, $4)`,
+        [orderId, productId, 10, 1000]
+      );
+    }
+  }
 }
 
 async function commonBeforeEach() {
@@ -86,4 +100,5 @@ module.exports = {
   commonAfterAll,
   getUserIdsArray: () => userIdsArray,
   getProductIdsArray: () => productIdsArray,
+  getOrderIdsArray: () => orderIdsArray,
 };
