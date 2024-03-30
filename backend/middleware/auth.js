@@ -69,8 +69,8 @@ function ensureCorrectUserOrAdmin(req, res, next) {
       throw new UnauthorizedError();
     }
     return next();
-  } catch (err) {
-    return next(err);
+  } catch (e) {
+    return next(e);
   }
 }
 
