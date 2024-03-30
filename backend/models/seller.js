@@ -9,7 +9,7 @@ class Seller {
    * data should be {firstName, lastName, username, email, password
    *                 shippingAddress, companyName, contactInfo}
    *
-   * Returns { companyName, contactInfo }
+   * Returns { sellerId, companyName, contactInfo }
    *
    * Throws BadRequestError if username or companyName already in database
    */
@@ -131,18 +131,26 @@ class Seller {
 
   /** Update seller data with 'data'
    *
-   * Data can include: { companyName, contactInfo }
+   * Data can include: { password, firstName, lastName, email,
+                        shippingAddress, companyName, contactInfo }
    *
-   * Returns { companyName, contactInfo, rating, salesCount }
+   * Returns { username, firstName, lastName, email, shippingAddress
+   *           companyName, contactInfo, rating, salesCount }
    *
    * Throws NotFoundError if seller not found or set to deleted
    */
 
   static async update(sellerId, data) {
-    const { setCols, values } = createSqlSetClause(data, {
-      companyName: "company_name",
-      contactInfo: "contact_info",
-    });
+    if (Object.keys(data).length === 0)
+      throw new BadRequestError(`Missing data`);
+    const { companyName, contactInfo, ...restOfData } = data;
+    const { setCols, values } = createSqlSetClause(
+      { companyName, contactInfo },
+      {
+        companyName: "company_name",
+        contactInfo: "contact_info",
+      }
+    );
 
     const sellerVarIdx = "$" + (values.length + 1);
 
@@ -155,11 +163,30 @@ class Seller {
                       sales_count AS "salesCount"`;
 
     const result = await db.query(querySql, [...values, sellerId]);
-    const seller = result.rows[0];
+    const updatedSeller = result.rows[0];
 
-    if (!seller) {
+    if (!updatedSeller) {
       throw new NotFoundError(`No seller found with ID: ${sellerId}`);
     }
+
+    const sellerUser = await User.getUserWithId(sellerId);
+
+    const updatedSellerUser = await User.update(
+      sellerUser.username,
+      restOfData
+    );
+
+    const seller = {
+      username: updatedSellerUser.username,
+      firstName: updatedSellerUser.firstName,
+      lastName: updatedSellerUser.lastName,
+      email: updatedSellerUser.email,
+      shippingAddress: updatedSellerUser.shippingAddress,
+      companyName: updatedSeller.companyName,
+      contactInfo: updatedSeller.contactInfo,
+      rating: updatedSeller.rating,
+      salesCount: updatedSeller.salesCount,
+    };
 
     return seller;
   }

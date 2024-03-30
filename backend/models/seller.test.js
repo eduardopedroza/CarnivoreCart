@@ -36,6 +36,7 @@ describe("create", function () {
     expect(seller).toEqual({
       companyName: "Test Company",
       contactInfo: "858-222-2222",
+      sellerId: expect.any(Number),
     });
     const found = await db.query(
       "SELECT FROM sellers WHERE company_name = 'Test Company'"
@@ -105,8 +106,25 @@ describe("get", function () {
   });
 });
 
+describe("getWithSellerId", function () {
+  test("works", async function () {
+    const sellerId = await Seller.getSellerId("Ribeyes & Co.");
+    const seller = await Seller.getSellerWithId(sellerId);
+    expect(seller).toEqual({
+      companyName: "Ribeyes & Co.",
+      contactInfo: "ribeyesandco@gmail.com",
+      rating: "4.80",
+      salesCount: 2442,
+    });
+  });
+});
+
 describe("update", function () {
   const updateData = {
+    firstName: "test update",
+    lastName: "test update",
+    email: "testupdate@email.com",
+    shippingAddress: "test update",
     companyName: "Updated Company Name",
     contactInfo: "858-555-5555",
   };
@@ -115,6 +133,11 @@ describe("update", function () {
     const sellerId = await Seller.getSellerId("Ribeyes & Co.");
     const updatedSeller = await Seller.update(sellerId, updateData);
     expect(updatedSeller).toEqual({
+      username: "user1",
+      firstName: "test update",
+      lastName: "test update",
+      email: "testupdate@email.com",
+      shippingAddress: "test update",
       companyName: "Updated Company Name",
       contactInfo: "858-555-5555",
       rating: "4.80",
