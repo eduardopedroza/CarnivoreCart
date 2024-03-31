@@ -8,6 +8,9 @@ const OrderProduct = require("./orderProduct");
 class Order {
   /** Create order with order data
    *
+   * data should be { userId, products, pricePaidInCents }
+   *    where products is [ { productId, quantiy, priceInCents } ]
+   *
    * Returns { userId, products, pricePaidInCents, status, orderDate }
    *      where products is [ { productId, quantiy, priceInCents } ]
    *
