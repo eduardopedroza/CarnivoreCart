@@ -7,6 +7,7 @@ const Order = require("../models/order");
 const Review = require("../models/review");
 
 const { createToken } = require("../helpers/tokens");
+let sellerOneId, userOneId, productOneId, productOnePriceInCents;
 
 async function commonBeforeAll() {
   await db.query("DELETE FROM orders");
@@ -136,6 +137,14 @@ async function commonBeforeAll() {
     rating: 4.5,
     comment: "awesome cut",
   });
+
+  sellerOneId = sellerOne.sellerId;
+  userOneId = userOne.userId;
+  productOneId = await db.query(
+    "SELECT product_id FROM products WHERE name = 'TP1'"
+  );
+  productOneId = productOneId.rows[0].product_id;
+  productOnePriceInCents = productOne.priceInCents;
 }
 
 async function commonBeforeEach() {
@@ -160,4 +169,8 @@ module.exports = {
   commonAfterAll,
   u1Token,
   u2Token,
+  getUserOneId: () => userOneId,
+  getSellerOneId: () => sellerOneId,
+  getProductOneId: () => productOneId,
+  getProductOnePriceInCents: () => productOnePriceInCents,
 };
