@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "productId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "rating": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "comment": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["userId", "productId", "rating", "comment"]
+}
