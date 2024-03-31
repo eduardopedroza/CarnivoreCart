@@ -31,7 +31,10 @@ describe("register", function () {
       ...newUser,
       password: "password",
     });
-    expect(user).toEqual(newUser);
+    expect(user).toEqual({
+      ...newUser,
+      userId: expect.any(Number),
+    });
     const found = await db.query("SELECT * FROM users WHERE username = 'new'");
     expect(found.rows.length).toEqual(1);
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
