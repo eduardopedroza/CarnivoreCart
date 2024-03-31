@@ -13,6 +13,7 @@ const {
   getSellerOneId,
 } = require("./_testCommon");
 const { NotFoundError } = require("../expressError.js");
+const { getUserIdsArray } = require("../models/_testCommon.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
@@ -118,18 +119,79 @@ describe("GET /products/:productId", () => {
     let res = await db.query(
       `SELECT product_id AS "productId" FROM products WHERE name = 'TP1'`
     );
+
     const response = await request(app).get(
       `/products/${res.rows[0].productId}`
     );
-    expect(response.body.product).toEqual({
-      sellerId: expect.any(Number),
-      name: "TP1",
-      description: "This is a test description",
-      priceInCents: 1000,
-      meatType: "test beef type 1",
-      cutType: "test cut type 1",
-      weightInGrams: 300,
-      imageUrl: "www.fakepic.com",
+    expect(response.body).toEqual({
+      product: {
+        productId: expect.any(Number),
+        sellerId: expect.any(Number),
+        name: "TP1",
+        description: "This is a test description",
+        priceInCents: 1000,
+        meatType: "test beef type 1",
+        cutType: "test cut type 1",
+        weightInGrams: 300,
+        imageUrl: "www.fakepic.com",
+      },
+      reviews: [
+        {
+          productId: expect.any(Number),
+          reviewId: expect.any(Number),
+          userId: expect.any(Number),
+          rating: "4.5",
+          comment: "awesome cut",
+          reviewDate: expect.any(String),
+        },
+      ],
+    });
+  });
+
+  test("not found if no such product", async () => {
+    const response = await request(app).get(`/products/213112`);
+    expect(response.statusCode).toEqual(404);
+  });
+});
+
+/************************************** GET /products/:productId/reviews/:reviewId */
+
+describe("GET /products/:productId/reviews/:reviewId", () => {
+  test("works", async () => {
+    let res1 = await db.query(
+      `SELECT product_id AS "productId" FROM products WHERE name = 'TP1'`
+    );
+
+    let res2 = await db.query(
+      `SELECT review_id AS "reviewId" FROM reviews WHERE product_id = $1`,
+      [res1.rows[0].productId]
+    );
+
+    const response = await request(app).get(
+      `/products/${res1.rows[0].productId}/reviews/${res2.rows[0].reviewId}`
+    );
+
+    let userIds = getUserIdsArray();
+    expect(response.body).toEqual({
+      product: {
+        productId: expect.any(Number),
+        sellerId: expect.any(Number),
+        name: "TP1",
+        description: "This is a test description",
+        priceInCents: 1000,
+        meatType: "test beef type 1",
+        cutType: "test cut type 1",
+        weightInGrams: 300,
+        imageUrl: "www.fakepic.com",
+      },
+      review: {
+        productId: expect.any(Number),
+        reviewId: res2.rows[0].reviewId,
+        userId: expect.any(Number),
+        rating: "4.5",
+        comment: "awesome cut",
+        reviewDate: expect.any(String),
+      },
     });
   });
 
@@ -203,7 +265,6 @@ describe("PATCH /products/:producId/remove", () => {
       `SELECT * FROM products WHERE product_id = $1 AND deleted = FALSE`,
       [res.rows[0].productId]
     );
-    console.log(res2);
     expect(res2.rows.length).toEqual(0);
   });
 

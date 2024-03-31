@@ -2,6 +2,7 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 const router = new express.Router();
 const Product = require("../models/product");
+const Review = require("../models/review");
 const { BadRequestError } = require("../expressError");
 
 const productNewSchema = require("../schemas/productNewSchema.json");
@@ -50,23 +51,46 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-/** GET /[productId]  =>  { product }
+/** GET /[productId]  =>  { product, reviews }
  *
  * Product is { sellerId, name , description, priceInCents,
  *           meatType, cutType, weightInGrams, imageUrl }
+ *
+ * Reviews is [ { reviewId, userId, productId, rating, comment, reviewDate } ]
  *
  * Authorization required: none
  */
 router.get("/:productId", async (req, res, next) => {
   try {
     const product = await Product.get(req.params.productId);
-    return res.json({ product });
+    const reviews = await Review.findAll(req.params.productId);
+    return res.json({ product, reviews });
   } catch (e) {
     return next(e);
   }
 });
 
-/** PATCH /[productId] { description, priceInCents, weight, imageUrl }
+/** GET /[producId]/review/[reviewId]
+ *
+ * Gets product and specific review pertaining to the product
+ *
+ * Product is { sellerId, name , description, priceInCents,
+ *           meatType, cutType, weightInGrams, imageUrl }
+ *
+ * Review is { reviewId, userId, productId, rating, comment, reviewDate }
+ *
+ * Authorization required: none
+ */
+router.get("/:productId/reviews/:reviewId", async (req, res, next) => {
+  try {
+    const product = await Product.get(req.params.productId);
+    const review = await Review.get(req.params.reviewId);
+    return res.json({ product, review });
+  } catch (e) {
+    return next(e);
+  }
+});
+/** PATCH /[productId] { description, priceInCents, weight, imageUrl }  =>  { product }
  *
  * Patches product data
  *
