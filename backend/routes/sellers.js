@@ -77,11 +77,11 @@ router.patch("/:sellerId", async (req, res, next) => {
   }
 });
 
-/** PATCH /[sellerId]
+/** PATCH /[sellerId]/remove
  *
  * Hides seller from application
  *
- * Returns undefined
+ * Returns { sellerId, deleted }
  *
  * Authorization required: none
  */
@@ -90,7 +90,7 @@ router.patch("/:sellerId/remove", async (req, res, next) => {
   try {
     await Seller.remove(req.params.sellerId);
     return res.json({
-      user: req.params.sellerId,
+      sellerId: req.params.sellerId,
       deleted: true,
     });
   } catch (err) {

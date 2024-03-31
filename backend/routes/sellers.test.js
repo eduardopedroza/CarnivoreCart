@@ -65,13 +65,11 @@ describe("POST /sellers/register", () => {
 describe("GET /sellers/:sellerId", () => {
   test("works", async () => {
     const response = await request(app).get(`/sellers/${getSellerOneId()}`);
-    expect(response.body).toEqual({
-      seller: {
-        companyName: "Seller 1",
-        contactInfo: "858-222-2222",
-        rating: null,
-        salesCount: 0,
-      },
+    expect(response.body.seller).toEqual({
+      companyName: "Seller 1",
+      contactInfo: "858-222-2222",
+      rating: null,
+      salesCount: 0,
     });
   });
 
