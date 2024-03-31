@@ -38,7 +38,10 @@ describe("create", function () {
 
     const product = await Product.create(newProduct);
 
-    expect(product).toEqual(newProduct);
+    expect(product).toEqual({
+      ...newProduct,
+      productId: expect.any(Number),
+    });
 
     const found = await db.query(`SELECT name FROM products WHERE name = $1`, [
       newProduct.name,
@@ -95,6 +98,7 @@ describe("get", function () {
 
     const product = await Product.get(productId);
     expect(product).toEqual({
+      productId: expect.any(Number),
       sellerId: sellerTwoId,
       name: "chicken wings",
       description: "very tasty chicken wings",

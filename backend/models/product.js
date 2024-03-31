@@ -86,7 +86,8 @@ class Product {
 
   static async get(productId) {
     const result = await db.query(
-      `SELECT seller_id AS "sellerId", 
+      `SELECT product_id AS "productId",
+              seller_id AS "sellerId", 
               name,
               description,
               price_in_cents AS "priceInCents",
