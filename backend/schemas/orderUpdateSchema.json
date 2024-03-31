@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "integer",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "priceInCents": {
+            "type": "integer"
+          }
+        },
+        "required": ["productId", "quantity", "priceInCents"],
+        "additionalProperties": false
+      }
+    },
+    "pricePaidInCents": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
