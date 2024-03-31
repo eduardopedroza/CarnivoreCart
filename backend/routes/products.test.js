@@ -12,8 +12,6 @@ const {
   u2Token,
   getSellerOneId,
 } = require("./_testCommon");
-const { NotFoundError } = require("../expressError.js");
-const { getUserIdsArray } = require("../models/_testCommon.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
@@ -171,7 +169,6 @@ describe("GET /products/:productId/reviews/:reviewId", () => {
       `/products/${res1.rows[0].productId}/reviews/${res2.rows[0].reviewId}`
     );
 
-    let userIds = getUserIdsArray();
     expect(response.body).toEqual({
       product: {
         productId: expect.any(Number),
