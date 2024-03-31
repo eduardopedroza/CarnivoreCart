@@ -90,6 +90,7 @@ router.get("/:productId/reviews/:reviewId", async (req, res, next) => {
     return next(e);
   }
 });
+
 /** PATCH /[productId] { description, priceInCents, weight, imageUrl }  =>  { product }
  *
  * Patches product data
