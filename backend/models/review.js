@@ -35,7 +35,7 @@ class Review {
 
   /** Given a productId, find all reviews for that product
    *
-   * returns [{ userId, productId, rating, comment }]
+   * returns [{ reviewId, userId, productId, rating, comment, reviewDate }]
    */
 
   static async findAll(productId) {
