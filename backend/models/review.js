@@ -33,20 +33,22 @@ class Review {
     return review;
   }
 
-  /** Find all reviews
+  /** Given a productId, find all reviews for that product
    *
    * returns [{ userId, productId, rating, comment }]
    */
 
-  static async findAll() {
+  static async findAll(productId) {
     const reviews = await db.query(
-      `SELECT user_id AS "userId",
+      `SELECT review_id AS "reviewId",
+              user_id AS "userId",
               product_id AS "productId",
               rating,
               comment,
               review_date AS "reviewDate"
        FROM reviews
-       WHERE deleted = FALSE`
+       WHERE product_id = $1 AND deleted = FALSE`,
+      [productId]
     );
 
     return reviews.rows;

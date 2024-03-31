@@ -56,21 +56,15 @@ describe("findAll", function () {
   test("works", async function () {
     let productIds = getProductIdsArray();
     let userIds = getUserIdsArray();
-    let reviews = await Review.findAll();
+    let reviews = await Review.findAll(productIds[0]);
     expect(reviews).toEqual([
       {
+        reviewId: expect.any(Number),
         userId: userIds[0],
         productId: productIds[0],
         rating: "4.8",
         comment: "amazing steak",
         reviewDate: new Date("2024-03-18T15:30:00.000Z"),
-      },
-      {
-        userId: userIds[1],
-        productId: productIds[1],
-        rating: "3.5",
-        comment: "awesome chicken wings",
-        reviewDate: new Date("2024-03-18T15:40:00.000Z"),
       },
     ]);
   });
