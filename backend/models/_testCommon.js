@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
-let userIdsArray, productIdsArray, orderIdsArray;
+let userIdsArray, productIdsArray, orderIdsArray, sellerIdsArray;
 
 async function commonBeforeAll() {
   // Clear tables
@@ -36,7 +36,7 @@ async function commonBeforeAll() {
     [userIdsArray[0], userIdsArray[1]]
   );
 
-  const sellerIdsArray = sellerInsertResult.rows.map((row) => row.seller_id);
+  sellerIdsArray = sellerInsertResult.rows.map((row) => row.seller_id);
 
   // Insert products
   const productInsertResult = await db.query(
@@ -101,4 +101,5 @@ module.exports = {
   getUserIdsArray: () => userIdsArray,
   getProductIdsArray: () => productIdsArray,
   getOrderIdsArray: () => orderIdsArray,
+  getSellerIdsArray: () => sellerIdsArray,
 };
