@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "priceInCents": {
+      "type": "integer"
+    },
+    "weightInGrams": {
+      "type": "integer"
+    },
+    "imageUrl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}
