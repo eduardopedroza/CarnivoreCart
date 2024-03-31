@@ -54,13 +54,14 @@ class Review {
 
   /** Given a reviewId, return review
    *
-   * returns { userId, productId, rating, comment, reviewDate }
+   * returns { reviewId, userId, productId, rating, comment, reviewDate }
    *
    * Throws NotFoundError if user not found or if user set to deleted
    */
   static async get(reviewId) {
     const result = await db.query(
-      `SELECT user_id AS "userId",
+      `SELECT review_id AS "reviewId",
+              user_id AS "userId",
               product_id AS "productId",
               rating,
               comment,
@@ -69,6 +70,39 @@ class Review {
        WHERE review_id = $1 AND NOT deleted`,
       [reviewId]
     );
+    const review = result.rows[0];
+
+    if (!review) throw new NotFoundError(`No review with ID: ${reviewId}`);
+
+    return review;
+  }
+
+  /** Update review data with 'data'
+   *
+   * Data can include { rating, comment }
+   *
+   * returns { userId, productId, rating, comment, reviewDate}
+   *
+   * Throws NotFoundError if user not found or if user set to deleted
+   */
+  static async update(reviewId, data) {
+    const { setCols, values } = createSqlSetClause(data, {
+      rating: "rating",
+      comment: "comment",
+    });
+
+    const sellerVarIdx = "$" + (values.length + 1);
+
+    const querySql = `UPDATE reviews
+                      SET ${setCols}
+                      WHERE review_id = ${sellerVarIdx} AND deleted = FALSE
+                      RETURNING user_id AS "userId", 
+                                product_id AS "productId",
+                                rating,
+                                comment,
+                                review_date AS "reviewDate"`;
+
+    const result = await db.query(querySql, [...values, reviewId]);
     const review = result.rows[0];
 
     if (!review) throw new NotFoundError(`No review with ID: ${reviewId}`);

@@ -83,11 +83,12 @@ describe("get", function () {
     let result = await db.query(
       `SELECT review_id
        FROM reviews
-       WHERE rating = '3.5'`
+       WHERE rating = 3.5`
     );
     let reviewId = result.rows[0].review_id;
     let review = await Review.get(reviewId);
     expect(review).toEqual({
+      reviewId: expect.any(Number),
       userId: userIds[1],
       productId: productIds[1],
       rating: "3.5",
@@ -106,8 +107,62 @@ describe("get", function () {
   });
 });
 
+describe("update", function () {
+  test("works", async function () {
+    let userIds = getUserIdsArray();
+    let productIds = getProductIdsArray();
+    let result = await db.query(
+      `SELECT review_id
+       FROM reviews
+       WHERE rating = '3.5'`
+    );
+    let reviewId = result.rows[0].review_id;
+    const updateData = {
+      rating: 4.9,
+      comment: "test update",
+    };
+    const review = await Review.update(reviewId, updateData);
+
+    expect(review).toEqual({
+      userId: userIds[1],
+      productId: productIds[1],
+      rating: "4.9",
+      comment: "test update",
+      reviewDate: new Date("2024-03-18T15:40:00.000Z"),
+    });
+  });
+
+  test("not found if no such review", async () => {
+    try {
+      const updateData = {
+        rating: 4.9,
+        comment: "test update",
+      };
+      const review = await Review.update(1281031, updateData);
+      fail();
+    } catch (e) {
+      expect(e instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("bad request if missing data", async () => {
+    try {
+      let result = await db.query(
+        `SELECT review_id
+         FROM reviews
+         WHERE rating = '3.5'`
+      );
+      let reviewId = result.rows[0].review_id;
+      const review = await Review.update(reviewId, {});
+      fail();
+    } catch (e) {
+      expect(e instanceof BadRequestError).toBeTruthy();
+    }
+  });
+});
+
 describe("remove", function () {
-  test("work", async function () {
+  test("works", async function () {
     let result = await db.query(
       `SELECT review_id
        FROM reviews
