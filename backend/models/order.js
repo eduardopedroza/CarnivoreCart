@@ -9,6 +9,7 @@ class Order {
   /** Create order with order data
    *
    * Returns { userId, products, pricePaidInCents, status, orderDate }
+   *      where products is [ { productId, quantiy, priceInCents } ]
    *
    * Throws NotFoundError if no such user or products
    */
@@ -61,6 +62,7 @@ class Order {
   /** Find all orders
    *
    * Returns [{ userId, products pricePaidInCents, status, orderDate }]
+   *      where products is [ { productId, quantiy, priceInCents } ]
    */
   static async findAll() {
     const ordersQuery = await db.query(
@@ -106,6 +108,7 @@ class Order {
   /** Given orderId, return order data
    *
    * Returns { userId, products, pricePaidInCents, status, orderDate }
+   *    where products is [ { productId, quantiy, priceInCents } ]
    *
    * Throws NotFoundError if no such user or set as deleted
    */
@@ -152,8 +155,10 @@ class Order {
   /** Update order, with 'data'
    *
    * data can include { products, pricePaidInCents, status }
+   *    where products is [ { productId, quantiy, priceInCents } ]
    *
    * Returns updatedOrder { userId, products pricePaidInCents, status, orderDate }
+   *    where products is [ { productId, quantiy, priceInCents } ]
    *
    * Throws NotFoundError if no such order or set as deleted
    */
