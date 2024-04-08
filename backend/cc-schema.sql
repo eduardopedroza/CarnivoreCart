@@ -6,6 +6,7 @@ CREATE TABLE users (
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
   shipping_address TEXT,
+  is_seller BOOLEAN NOT NULL DEFAULT FALSE,
   deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 

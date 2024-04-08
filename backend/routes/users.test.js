@@ -31,6 +31,7 @@ describe("GET /users/:username", () => {
         lastName: "U1L",
         email: "user1@user.com",
         shippingAddress: "test address 1",
+        isSeller: false,
       },
     });
   });
@@ -65,6 +66,7 @@ describe("PATCH /users/:username", () => {
         lastName: "U1L",
         email: "user1@user.com",
         shippingAddress: "test address 1",
+        isSeller: false,
       },
     });
   });

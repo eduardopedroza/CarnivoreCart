@@ -59,6 +59,14 @@ class Seller {
       [userId, companyName, contactInfo]
     );
 
+    //Set user as seller
+    await db.query(
+      `UPDATE users
+       SET is_seller = TRUE
+       WHERE user_id = $1`,
+      [userId]
+    );
+
     const seller = sellerResult.rows[0];
 
     return seller;

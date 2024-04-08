@@ -55,7 +55,7 @@ class User {
         email,
         shipping_address)
        VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING user_id AS "userId", username, first_name AS "firstName", last_name AS "lastName", email, shipping_address AS "shippingAddress"`,
+       RETURNING user_id AS "userId", username, first_name AS "firstName", last_name AS "lastName", email, shipping_address AS "shippingAddress", is_seller AS "isSeller"`,
       [username, hashedPassword, firstName, lastName, email, shippingAddress]
     );
 
@@ -77,7 +77,8 @@ class User {
               first_name AS "firstName",
               last_name AS "lastName",
               email,
-              shipping_address AS "shippingAddress"
+              shipping_address AS "shippingAddress",
+              is_seller AS "isSeller"
        FROM users
        WHERE username = $1`,
       [username]
@@ -104,7 +105,8 @@ class User {
               first_name AS "firstName",
               last_name AS "lastName",
               email,
-              shipping_address AS "shippingAddress"
+              shipping_address AS "shippingAddress",
+              is_seller AS "isSeller"
        FROM users
        WHERE deleted = FALSE`
     );
@@ -124,7 +126,8 @@ class User {
               first_name AS "firstName",
               last_name AS "lastName",
               email,
-              shipping_address AS "shippingAddress"
+              shipping_address AS "shippingAddress",
+              is_seller AS "isSeller"
        FROM users
        WHERE username = $1 AND deleted = FALSE`,
       [username]
@@ -149,7 +152,8 @@ class User {
               first_name AS "firstName",
               last_name AS "lastName",
               email,
-              shipping_address AS "shippingAddress"
+              shipping_address AS "shippingAddress",
+              is_seller AS "isSeller"
        FROM users
        WHERE user_id = $1 AND deleted = FALSE`,
       [userId]
@@ -190,7 +194,8 @@ class User {
                                 first_name AS "firstName",
                                 last_name AS "lastName",
                                 email,
-                                shipping_address AS "shippingAddress"`;
+                                shipping_address AS "shippingAddress",
+                                is_seller AS "isSeller"`;
 
     const result = await db.query(querySql, [...values, username]);
     const user = result.rows[0];

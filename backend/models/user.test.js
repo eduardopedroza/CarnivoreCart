@@ -34,6 +34,7 @@ describe("register", function () {
     expect(user).toEqual({
       ...newUser,
       userId: expect.any(Number),
+      isSeller: false,
     });
     const found = await db.query("SELECT * FROM users WHERE username = 'new'");
     expect(found.rows.length).toEqual(1);
@@ -84,6 +85,7 @@ describe("authenticate", function () {
       lastName: "u1l",
       email: "u1@gmail.com",
       shippingAddress: "123 test 1 lane",
+      isSeller: false,
     });
   });
 
@@ -116,6 +118,7 @@ describe("findAll", function () {
         lastName: "u1l",
         email: "u1@gmail.com",
         shippingAddress: "123 test 1 lane",
+        isSeller: false,
       },
       {
         username: "user2",
@@ -123,6 +126,7 @@ describe("findAll", function () {
         lastName: "u2l",
         email: "u2@gmail.com",
         shippingAddress: "123 test 2 lane",
+        isSeller: false,
       },
     ]);
   });
@@ -137,6 +141,7 @@ describe("get", function () {
       lastName: "u1l",
       email: "u1@gmail.com",
       shippingAddress: "123 test 1 lane",
+      isSeller: false,
     });
   });
 
@@ -166,6 +171,7 @@ describe("update", function () {
       lastName: "updatedU1f",
       email: "new@gmail.com",
       shippingAddress: "1234 Updated Lane",
+      isSeller: false,
     });
   });
 
@@ -179,6 +185,7 @@ describe("update", function () {
       lastName: "u1l",
       email: "u1@gmail.com",
       shippingAddress: "123 test 1 lane",
+      isSeller: false,
     });
     const found = await db.query(
       "SELECT * FROM users WHERE username = 'user1'"
