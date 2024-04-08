@@ -26,6 +26,7 @@ describe("GET /users/:username", () => {
       .set("authorization", `Bearer ${u1Token}`);
     expect(response.body).toEqual({
       user: {
+        userId: expect.any(Number),
         username: "u1",
         firstName: "U1F",
         lastName: "U1L",

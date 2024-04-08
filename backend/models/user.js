@@ -116,13 +116,14 @@ class User {
 
   /** Given a username, return user
    *
-   * Returns { username, firstName, lastName, email, shippingAddress }
+   * Returns { userId, username, firstName, lastName, email, shippingAddress }
    *
    * Throws NotFoundError if not found or set to deleted
    */
   static async get(username) {
     const result = await db.query(
-      `SELECT username,
+      `SELECT user_id AS "userId",
+              username,
               first_name AS "firstName",
               last_name AS "lastName",
               email,

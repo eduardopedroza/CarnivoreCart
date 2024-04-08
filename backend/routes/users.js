@@ -9,7 +9,7 @@ const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
 
 /** GET /[username] => { user }
  *
- * Returns { username, firstName, lastName, email, shippingAddress }
+ * Returns { userId, username, firstName, lastName, email, shippingAddress }
  *
  * Authorization required: admin or same user as username
  **/

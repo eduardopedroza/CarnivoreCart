@@ -136,6 +136,7 @@ describe("get", function () {
   test("works", async function () {
     const user = await User.get("user1");
     expect(user).toEqual({
+      userId: expect.any(Number),
       username: "user1",
       firstName: "u1f",
       lastName: "u1l",
