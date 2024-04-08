@@ -9,13 +9,15 @@ const productsRoutes = require("./routes/products");
 const ordersRoutes = require("./routes/orders");
 const reviewsRoutes = require("./routes/reviews");
 const sellersRoutes = require("./routes/sellers");
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
-app.use(authenticateJWT);
 
 app.use("/auth", authRoutes);
+app.use(authenticateJWT);
 app.use("/users", usersRoutes);
 app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
