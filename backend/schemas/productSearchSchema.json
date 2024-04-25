@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://our.company.com/companySearch.schema.json",
+  "type": "object",
+  "properties": {
+    "sellerId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "meatType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cutType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "minPrice": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "maxPrice": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}

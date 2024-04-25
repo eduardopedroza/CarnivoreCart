@@ -62,6 +62,7 @@ describe("getAll", function () {
     const products = await Product.findAll();
     expect(products).toEqual([
       {
+        productId: expect.any(Number),
         sellerId: sellerOneId,
         name: "grass-fed ribeye",
         description: "juicy steak",
@@ -73,6 +74,7 @@ describe("getAll", function () {
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
       },
       {
+        productId: expect.any(Number),
         sellerId: sellerTwoId,
         name: "chicken wings",
         description: "very tasty chicken wings",
@@ -84,6 +86,142 @@ describe("getAll", function () {
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
       },
     ]);
+  });
+
+  test("works: by seller", async function () {
+    const products = await Product.findAll({ sellerId: sellerOneId });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerOneId,
+        name: "grass-fed ribeye",
+        description: "juicy steak",
+        priceInCents: 769,
+        meatType: "beef",
+        cutType: "rib eye",
+        weightInGrams: 100,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by name", async function () {
+    const products = await Product.findAll({ name: "ribeye" });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerOneId,
+        name: "grass-fed ribeye",
+        description: "juicy steak",
+        priceInCents: 769,
+        meatType: "beef",
+        cutType: "rib eye",
+        weightInGrams: 100,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by meatType", async function () {
+    const products = await Product.findAll({ meatType: "chicken" });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerTwoId,
+        name: "chicken wings",
+        description: "very tasty chicken wings",
+        priceInCents: 239,
+        meatType: "chicken",
+        cutType: "chicken wings",
+        weightInGrams: 500,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by cutType", async function () {
+    const products = await Product.findAll({ cutType: "rib eye" });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerOneId,
+        name: "grass-fed ribeye",
+        description: "juicy steak",
+        priceInCents: 769,
+        meatType: "beef",
+        cutType: "rib eye",
+        weightInGrams: 100,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by minPrice", async function () {
+    const products = await Product.findAll({ minPrice: 500 });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerOneId,
+        name: "grass-fed ribeye",
+        description: "juicy steak",
+        priceInCents: 769,
+        meatType: "beef",
+        cutType: "rib eye",
+        weightInGrams: 100,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by maxPrice", async function () {
+    const products = await Product.findAll({ maxPrice: 500 });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerTwoId,
+        name: "chicken wings",
+        description: "very tasty chicken wings",
+        priceInCents: 239,
+        meatType: "chicken",
+        cutType: "chicken wings",
+        weightInGrams: 500,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("works: by minPrice and maxPrice", async function () {
+    const products = await Product.findAll({ minPrice: 200, maxPrice: 500 });
+    expect(products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: sellerTwoId,
+        name: "chicken wings",
+        description: "very tasty chicken wings",
+        priceInCents: 239,
+        meatType: "chicken",
+        cutType: "chicken wings",
+        weightInGrams: 500,
+        imageUrl:
+          "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      },
+    ]);
+  });
+
+  test("bad request if minPrice > maxPrice", async function () {
+    try {
+      await Product.findAll({ minPrice: 500, maxPrice: 200 });
+      fail();
+    } catch (e) {
+      console.log(e);
+      expect(e instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
 

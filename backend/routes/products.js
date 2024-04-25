@@ -7,7 +7,7 @@ const { BadRequestError } = require("../expressError");
 
 const productNewSchema = require("../schemas/productNewSchema.json");
 const productUpdateSchema = require("../schemas/productUpdateSchema.json");
-
+const productSearchSchema = require("../schemas/productSearchSchema.json");
 /** POST /create { product } => { product }
  *
  * product should be { sellerId, name , description, priceInCents,
@@ -37,14 +37,28 @@ router.post("/create", async (req, res, next) => {
  *
  * Gets all products
  *
- * Product is { sellerId, name , description, priceInCents,
+ * Product is { productId, sellerId, name , description, priceInCents,
  *           meatType, cutType, weightInGrams, imageUrl }
+ *
+ * Can filter on provided search filters:
+ * - sellerId
+ * - name (will find case-insensitive, partial matches)
+ * - meatType (will find case-insensitive, partial matches)
+ * - cutType (will find case-insensitive, partial matches)
+ * - minPrice
+ * - maxPrice
  *
  * Authorization required: none
  */
 router.get("/", async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const validator = jsonschema.validate(req.query, productSearchSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    const products = await Product.findAll(req.query);
     return res.json({ products });
   } catch (e) {
     return next(e);

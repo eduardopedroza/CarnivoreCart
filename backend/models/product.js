@@ -2,7 +2,7 @@ const db = require("../db");
 const User = require("./user");
 const Seller = require("./seller");
 const { createSqlSetClause } = require("../helpers/sql");
-const { NotFoundError } = require("../expressError");
+const { NotFoundError, BadRequestError } = require("../expressError");
 
 class Product {
   /** Create product
@@ -55,25 +55,80 @@ class Product {
     return product;
   }
 
-  /** Find all products
+  /** Find all products (optional filter on searchFilters)
    *
-   * Returns [{ sellerId, name, description, priceInCents, meatType, cutType, weightInGrams, imageUrl }]
+   * searchFilters (all optional):
+   * - sellerId
+   * - name (will find case-insensitive, partial matches)
+   * - meatType (will find case-insensitive, partial matches)
+   * - cutType (will find case-insensitive, partial matches)
+   * - minPrice
+   * - maxPrice
+   *
+   * Returns [{ productId, sellerId, name, description, priceInCents,
+   *          meatType, cutType, weightInGrams, imageUrl }]
    */
 
-  static async findAll() {
-    const result = await db.query(
-      `SELECT seller_id AS "sellerId", 
-              name,
-              description,
-              price_in_cents AS "priceInCents",
-              meat_type AS "meatType",
-              cut_type AS "cutType",
-              weight_in_grams AS "weightInGrams",
-              image_url AS "imageUrl"
-       FROM products
-       WHERE deleted = FALSE`
-    );
+  static async findAll(searchFilters = {}) {
+    let query = `SELECT product_id AS "productId",
+                    seller_id AS "sellerId", 
+                    name,
+                    description,
+                    price_in_cents AS "priceInCents",
+                    meat_type AS "meatType",
+                    cut_type AS "cutType",
+                    weight_in_grams AS "weightInGrams",
+                    image_url AS "imageUrl"
+                 FROM products`;
 
+    let whereExpressions = [];
+    let queryValues = [];
+
+    const { sellerId, name, meatType, cutType, minPrice, maxPrice } =
+      searchFilters;
+
+    if (minPrice > maxPrice) {
+      throw new BadRequestError("Min price cannot be greater than max price");
+    }
+
+    if (sellerId) {
+      queryValues.push(sellerId);
+      whereExpressions.push(`seller_id = $${queryValues.length}`);
+    }
+
+    if (name) {
+      queryValues.push(`%${name}%`);
+      whereExpressions.push(`name ILIKE $${queryValues.length}`);
+    }
+
+    if (meatType) {
+      queryValues.push(`%${meatType}%`);
+      whereExpressions.push(`meat_type ILIKE $${queryValues.length}`);
+    }
+
+    if (cutType) {
+      queryValues.push(`%${cutType}%`);
+      whereExpressions.push(`cut_type ILIKE $${queryValues.length}`);
+    }
+
+    if (minPrice !== undefined) {
+      queryValues.push(minPrice);
+      whereExpressions.push(`price_in_cents >= $${queryValues.length}`);
+    }
+
+    if (maxPrice !== undefined) {
+      queryValues.push(maxPrice);
+      whereExpressions.push(`price_in_cents <= $${queryValues.length}`);
+    }
+
+    if (whereExpressions.length > 0) {
+      query += " WHERE " + whereExpressions.join(" AND ");
+    } else {
+      query += " WHERE 1=1";
+    }
+    query += " AND deleted = FALSE";
+
+    const result = await db.query(query, queryValues);
     return result.rows;
   }
 

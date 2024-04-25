@@ -77,6 +77,7 @@ describe("GET /products", () => {
     const response = await request(app).get("/products");
     expect(response.body.products).toEqual([
       {
+        productId: expect.any(Number),
         sellerId: expect.any(Number),
         name: "TP1",
         description: "This is a test description",
@@ -87,6 +88,7 @@ describe("GET /products", () => {
         imageUrl: "www.fakepic.com",
       },
       {
+        productId: expect.any(Number),
         sellerId: expect.any(Number),
         name: "TP2",
         description: "This is a test description",
@@ -97,6 +99,43 @@ describe("GET /products", () => {
         imageUrl: "www.fakepic.com",
       },
       {
+        productId: expect.any(Number),
+        sellerId: expect.any(Number),
+        name: "TP2",
+        description: "This is a test description",
+        priceInCents: 2000,
+        meatType: "test beef type 3",
+        cutType: "test cut type 3",
+        weightInGrams: 300,
+        imageUrl: "www.fakepic.com",
+      },
+    ]);
+  });
+
+  test("works: filtering", async () => {
+    const response = await request(app).get("/products").query({ name: "TP1" });
+    expect(response.body.products).toEqual([
+      {
+        productId: expect.any(Number),
+        sellerId: expect.any(Number),
+        name: "TP1",
+        description: "This is a test description",
+        priceInCents: 1000,
+        meatType: "test beef type 1",
+        cutType: "test cut type 1",
+        weightInGrams: 300,
+        imageUrl: "www.fakepic.com",
+      },
+    ]);
+  });
+
+  test("works: filtering on multiple fields", async () => {
+    const response = await request(app)
+      .get("/products")
+      .query({ name: "TP2", meatType: "test beef type 3" });
+    expect(response.body.products).toEqual([
+      {
+        productId: expect.any(Number),
         sellerId: expect.any(Number),
         name: "TP2",
         description: "This is a test description",
