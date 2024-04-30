@@ -12,6 +12,7 @@ const {
   commonAfterEach,
   commonAfterAll,
 } = require("./_testCommon");
+const e = require("cors");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
@@ -246,6 +247,15 @@ describe("get", function () {
       weightInGrams: 500,
       imageUrl:
         "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+      reviews: [
+        {
+          comment: "awesome chicken wings",
+          rating: "3.5",
+          reviewDate: expect.any(Date),
+          reviewId: expect.any(Number),
+          userId: expect.any(Number),
+        },
+      ],
     });
   });
   test("not found if no such product", async function () {

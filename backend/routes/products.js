@@ -65,10 +65,10 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-/** GET /[productId]  =>  { product, reviews }
+/** GET /[productId]  =>  { product }
  *
  * Product is { sellerId, name , description, priceInCents,
- *           meatType, cutType, weightInGrams, imageUrl }
+ *           meatType, cutType, weightInGrams, imageUrl, reviews: [] }
  *
  * Reviews is [ { reviewId, userId, productId, rating, comment, reviewDate } ]
  *
@@ -77,33 +77,28 @@ router.get("/", async (req, res, next) => {
 router.get("/:productId", async (req, res, next) => {
   try {
     const product = await Product.get(req.params.productId);
-    const reviews = await Review.findAll(req.params.productId);
-    return res.json({ product, reviews });
+    return res.json({ product });
   } catch (e) {
     return next(e);
   }
 });
 
-/** GET /[producId]/review/[reviewId]
- *
- * Gets product and specific review pertaining to the product
- *
- * Product is { sellerId, name , description, priceInCents,
- *           meatType, cutType, weightInGrams, imageUrl }
- *
- * Review is { reviewId, userId, productId, rating, comment, reviewDate }
- *
- * Authorization required: none
- */
-router.get("/:productId/reviews/:reviewId", async (req, res, next) => {
-  try {
-    const product = await Product.get(req.params.productId);
-    const review = await Review.get(req.params.reviewId);
-    return res.json({ product, review });
-  } catch (e) {
-    return next(e);
-  }
-});
+// /** GET /[producId]/review/[reviewId]  =>  { review }
+//  *
+//  * Gets specific review from a product
+//  *
+//  * Review is { reviewId, userId, productId, rating, comment, reviewDate }
+//  *
+//  * Authorization required: none
+//  */
+// router.get("/:productId/reviews/:reviewId", async (req, res, next) => {
+//   try {
+//     const review = await Review.get(req.params.reviewId);
+//     return res.json({ review });
+//   } catch (e) {
+//     return next(e);
+//   }
+// });
 
 /** PATCH /[productId] { description, priceInCents, weight, imageUrl }  =>  { product }
  *

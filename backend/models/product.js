@@ -132,32 +132,55 @@ class Product {
     return result.rows;
   }
 
-  /** Given a productId, return product
+  /** Given a productId, return { product, reviews }
    *
-   * Returns { sellerId, name, description, priceInCents, meatType, cutType, weightInGranms, imageUrl }
+   *  Returns { sellerId, name, description, priceInCents, meatType, cutType, weightInGrams, imageUrl, reviews: [] }
    *
-   * Throws NotFoundError if product not found in database or product has been deleted
+   *  Throws NotFoundError if product not found in database or product has been deleted
    */
-
   static async get(productId) {
     const result = await db.query(
-      `SELECT product_id AS "productId",
-              seller_id AS "sellerId", 
-              name,
-              description,
-              price_in_cents AS "priceInCents",
-              meat_type AS "meatType",
-              cut_type AS "cutType",
-              weight_in_grams AS "weightInGrams",
-              image_url AS "imageUrl"
-       FROM products
-       WHERE product_id = $1 AND deleted = FALSE`,
+      `SELECT p.product_id AS "productId",
+            p.seller_id AS "sellerId", 
+            p.name,
+            p.description,
+            p.price_in_cents AS "priceInCents",
+            p.meat_type AS "meatType",
+            p.cut_type AS "cutType",
+            p.weight_in_grams AS "weightInGrams",
+            p.image_url AS "imageUrl",
+            r.review_id AS "reviewId",
+            r.user_id AS "userId",
+            r.rating,
+            r.comment,
+            r.review_date AS "reviewDate"
+     FROM products p
+     LEFT JOIN reviews r ON p.product_id = r.product_id
+     WHERE p.product_id = $1 AND p.deleted = FALSE`,
       [productId]
     );
 
     const product = result.rows[0];
 
     if (!product) throw new NotFoundError(`No product with ID: ${productId}`);
+
+    const reviews = result.rows
+      .filter((row) => row.reviewId)
+      .map((row) => ({
+        reviewId: row.reviewId,
+        userId: row.userId,
+        rating: row.rating,
+        comment: row.comment,
+        reviewDate: row.reviewDate,
+      }));
+
+    delete product.reviewId;
+    delete product.userId;
+    delete product.rating;
+    delete product.comment;
+    delete product.reviewDate;
+
+    product.reviews = reviews;
 
     return product;
   }
