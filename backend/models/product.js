@@ -66,20 +66,30 @@ class Product {
    * - maxPrice
    *
    * Returns [{ productId, sellerId, name, description, priceInCents,
-   *          meatType, cutType, weightInGrams, imageUrl }]
+   *          meatType, cutType, weightInGrams, imageUrl, averageRating, totalReviews}]
    */
 
   static async findAll(searchFilters = {}) {
-    let query = `SELECT product_id AS "productId",
-                    seller_id AS "sellerId", 
-                    name,
-                    description,
-                    price_in_cents AS "priceInCents",
-                    meat_type AS "meatType",
-                    cut_type AS "cutType",
-                    weight_in_grams AS "weightInGrams",
-                    image_url AS "imageUrl"
-                 FROM products`;
+    let query = `SELECT p.product_id AS "productId",
+                        p.seller_id AS "sellerId", 
+                        p.name,
+                        p.description,
+                        p.price_in_cents AS "priceInCents",
+                        p.meat_type AS "meatType",
+                        p.cut_type AS "cutType",
+                        p.weight_in_grams AS "weightInGrams",
+                        p.image_url AS "imageUrl",
+                        COALESCE(r.total_reviews, 0) AS "totalReviews",
+                        COALESCE(r.average_rating, 0) AS "averageRating"
+                 FROM products p
+                 LEFT JOIN (
+                     SELECT product_id, 
+                            COUNT(*) AS total_reviews,
+                            AVG(rating) AS average_rating
+                     FROM reviews
+                     WHERE deleted = FALSE
+                     GROUP BY product_id
+                 ) r ON p.product_id = r.product_id`;
 
     let whereExpressions = [];
     let queryValues = [];
@@ -93,32 +103,32 @@ class Product {
 
     if (sellerId) {
       queryValues.push(sellerId);
-      whereExpressions.push(`seller_id = $${queryValues.length}`);
+      whereExpressions.push(`p.seller_id = $${queryValues.length}`);
     }
 
     if (name) {
       queryValues.push(`%${name}%`);
-      whereExpressions.push(`name ILIKE $${queryValues.length}`);
+      whereExpressions.push(`p.name ILIKE $${queryValues.length}`);
     }
 
     if (meatType) {
       queryValues.push(`%${meatType}%`);
-      whereExpressions.push(`meat_type ILIKE $${queryValues.length}`);
+      whereExpressions.push(`p.meat_type ILIKE $${queryValues.length}`);
     }
 
     if (cutType) {
       queryValues.push(`%${cutType}%`);
-      whereExpressions.push(`cut_type ILIKE $${queryValues.length}`);
+      whereExpressions.push(`p.cut_type ILIKE $${queryValues.length}`);
     }
 
     if (minPrice !== undefined) {
       queryValues.push(minPrice);
-      whereExpressions.push(`price_in_cents >= $${queryValues.length}`);
+      whereExpressions.push(`p.price_in_cents >= $${queryValues.length}`);
     }
 
     if (maxPrice !== undefined) {
       queryValues.push(maxPrice);
-      whereExpressions.push(`price_in_cents <= $${queryValues.length}`);
+      whereExpressions.push(`p.price_in_cents <= $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
@@ -126,7 +136,7 @@ class Product {
     } else {
       query += " WHERE 1=1";
     }
-    query += " AND deleted = FALSE";
+    query += " AND p.deleted = FALSE";
 
     const result = await db.query(query, queryValues);
     return result.rows;

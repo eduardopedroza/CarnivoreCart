@@ -73,6 +73,8 @@ describe("getAll", function () {
         weightInGrams: 100,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
       {
         productId: expect.any(Number),
@@ -85,6 +87,8 @@ describe("getAll", function () {
         weightInGrams: 500,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -103,6 +107,8 @@ describe("getAll", function () {
         weightInGrams: 100,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -121,6 +127,8 @@ describe("getAll", function () {
         weightInGrams: 100,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -139,6 +147,8 @@ describe("getAll", function () {
         weightInGrams: 500,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -157,6 +167,8 @@ describe("getAll", function () {
         weightInGrams: 100,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -175,6 +187,8 @@ describe("getAll", function () {
         weightInGrams: 100,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -193,6 +207,8 @@ describe("getAll", function () {
         weightInGrams: 500,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });
@@ -211,6 +227,8 @@ describe("getAll", function () {
         weightInGrams: 500,
         imageUrl:
           "https://embed.widencdn.net/img/beef/ng96sbyljl/800x600px/Ribeye%20Steak_Lip-on.psd?keep=c&u=7fueml",
+        averageRating: expect.any(String),
+        totalReviews: expect.any(String),
       },
     ]);
   });

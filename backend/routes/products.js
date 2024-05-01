@@ -38,7 +38,7 @@ router.post("/create", async (req, res, next) => {
  * Gets all products
  *
  * Product is { productId, sellerId, name , description, priceInCents,
- *           meatType, cutType, weightInGrams, imageUrl }
+ *           meatType, cutType, weightInGrams, imageUrl, averageRating, totalReviews }
  *
  * Can filter on provided search filters:
  * - sellerId

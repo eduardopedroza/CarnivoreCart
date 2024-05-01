@@ -86,6 +86,8 @@ describe("GET /products", () => {
         cutType: "test cut type 1",
         weightInGrams: 300,
         imageUrl: "www.fakepic.com",
+        totalReviews: expect.any(String),
+        averageRating: expect.any(String),
       },
       {
         productId: expect.any(Number),
@@ -97,6 +99,8 @@ describe("GET /products", () => {
         cutType: "test cut type 2",
         weightInGrams: 300,
         imageUrl: "www.fakepic.com",
+        totalReviews: expect.any(String),
+        averageRating: expect.any(String),
       },
       {
         productId: expect.any(Number),
@@ -108,6 +112,8 @@ describe("GET /products", () => {
         cutType: "test cut type 3",
         weightInGrams: 300,
         imageUrl: "www.fakepic.com",
+        totalReviews: expect.any(String),
+        averageRating: expect.any(String),
       },
     ]);
   });
@@ -125,6 +131,8 @@ describe("GET /products", () => {
         cutType: "test cut type 1",
         weightInGrams: 300,
         imageUrl: "www.fakepic.com",
+        totalReviews: expect.any(String),
+        averageRating: expect.any(String),
       },
     ]);
   });
@@ -144,6 +152,8 @@ describe("GET /products", () => {
         cutType: "test cut type 3",
         weightInGrams: 300,
         imageUrl: "www.fakepic.com",
+        totalReviews: expect.any(String),
+        averageRating: expect.any(String),
       },
     ]);
   });
