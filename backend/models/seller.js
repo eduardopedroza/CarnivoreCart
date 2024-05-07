@@ -9,7 +9,7 @@ class Seller {
    * data should be {firstName, lastName, username, email, password
    *                 shippingAddress, companyName, contactInfo}
    *
-   * Returns { sellerId, companyName, contactInfo }
+   * Returns { username, firstName, lastName, email, shippingAddress }
    *
    * Throws BadRequestError if username or companyName already in database
    */
@@ -24,7 +24,7 @@ class Seller {
     companyName,
     contactInfo,
   }) {
-    await User.register({
+    const userResult = await User.register({
       username,
       password,
       firstName,
@@ -43,19 +43,12 @@ class Seller {
     if (companyDuplicateCheck.rows[0])
       throw new BadRequestError(`Company name already exists: ${companyName}`);
 
-    const userResult = await db.query(
-      `SELECT user_id
-       FROM users
-       WHERE username = $1`,
-      [username]
-    );
+    const userId = userResult.userId;
 
-    const userId = userResult.rows[0].user_id;
-
-    const sellerResult = await db.query(
+    await db.query(
       `INSERT INTO sellers(seller_id, company_name, contact_info)
-       VALUES ($1, $2, $3)
-       RETURNING seller_id AS "sellerId", company_name AS "companyName", contact_info AS "contactInfo"`,
+      VALUES ($1, $2, $3)
+      RETURNING seller_id AS "sellerId", company_name AS "companyName", contact_info AS "contactInfo"`,
       [userId, companyName, contactInfo]
     );
 
@@ -67,9 +60,11 @@ class Seller {
       [userId]
     );
 
-    const seller = sellerResult.rows[0];
+    const user = userResult;
 
-    return seller;
+    user.isSeller = true;
+
+    return user;
   }
 
   /** Find all sellers

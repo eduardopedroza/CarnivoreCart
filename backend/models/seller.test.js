@@ -34,9 +34,13 @@ describe("create", function () {
       password: "password",
     });
     expect(seller).toEqual({
-      companyName: "Test Company",
-      contactInfo: "858-222-2222",
-      sellerId: expect.any(Number),
+      username: "newSeller",
+      firstName: "TestSeller",
+      lastName: "TesterSeller",
+      email: "testseller@test.com",
+      shippingAddress: "123 Test Seller Lane",
+      userId: expect.any(Number),
+      isSeller: true,
     });
     const found = await db.query(
       "SELECT FROM sellers WHERE company_name = 'Test Company'"

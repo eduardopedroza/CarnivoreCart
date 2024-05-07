@@ -63,7 +63,7 @@ async function commonBeforeAll() {
   });
 
   const productOne = await Product.create({
-    sellerId: sellerOne.sellerId,
+    sellerId: sellerOne.userId,
     name: "TP1",
     description: "This is a test description",
     priceInCents: 1000,
@@ -74,7 +74,7 @@ async function commonBeforeAll() {
   });
 
   const productTwo = await Product.create({
-    sellerId: sellerOne.sellerId,
+    sellerId: sellerOne.userId,
     name: "TP2",
     description: "This is a test description",
     priceInCents: 2000,
@@ -85,7 +85,7 @@ async function commonBeforeAll() {
   });
 
   const productThree = await Product.create({
-    sellerId: sellerTwo.sellerId,
+    sellerId: sellerTwo.userId,
     name: "TP2",
     description: "This is a test description",
     priceInCents: 2000,
@@ -138,7 +138,7 @@ async function commonBeforeAll() {
     comment: "awesome cut",
   });
 
-  sellerOneId = sellerOne.sellerId;
+  sellerOneId = sellerOne.userId;
   userOneId = userOne.userId;
   productOneId = await db.query(
     "SELECT product_id FROM products WHERE name = 'TP1'"

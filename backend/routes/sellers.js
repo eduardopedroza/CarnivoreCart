@@ -3,6 +3,7 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 const router = new express.Router();
 const Seller = require("../models/seller");
+const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
 
@@ -14,7 +15,7 @@ const sellerUpdateSchema = require("../schemas/sellersUpdateSchema.json");
  * seller should be { firstName, lastName, username, email, password
  *                  shippingAddress, companyName, contactInfo }
  *
- * Returns { sellerId, companyName, contactInfo }
+ * Returns { username, firstName, lastName, email, shippingAddress }
  *
  * Authorization required: none
  */
@@ -26,9 +27,8 @@ router.post("/register", async (req, res, next) => {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs);
     }
-
     const seller = await Seller.create(req.body);
-    const token = createToken(seller.sellerId);
+    const token = createToken(seller);
     return res.status(201).json({ token });
   } catch (e) {
     return next(e);
