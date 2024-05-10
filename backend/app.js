@@ -9,6 +9,7 @@ const productsRoutes = require("./routes/products");
 const ordersRoutes = require("./routes/orders");
 const reviewsRoutes = require("./routes/reviews");
 const sellersRoutes = require("./routes/sellers");
+const paymentRoutes = require("./routes/payment");
 const cors = require("cors");
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
 app.use("/reviews", reviewsRoutes);
 app.use("/sellers", sellersRoutes);
+app.use("/payment", paymentRoutes);
 
 /** Handle 404 errors */
 app.use(function (req, res, next) {
