@@ -34,5 +34,5 @@
     }
   },
   "required": ["userId", "products", "pricePaidInCents"],
-  "additionalProperties": false
+  "additionalProperties": true
 }
