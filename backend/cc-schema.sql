@@ -13,11 +13,11 @@ CREATE TABLE users (
 CREATE TABLE products (
   product_id SERIAL PRIMARY KEY,
   seller_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-  name VARCHAR(100) NOT NULL,
+  name VARCHAR NOT NULL,
   description TEXT NOT NULL,
   price_in_cents INTEGER NOT NULL,
-  meat_type VARCHAR(50) NOT NULL,
-  cut_type VARCHAR(50) NOT NULL,
+  meat_type VARCHAR NOT NULL,
+  cut_type VARCHAR NOT NULL,
   weight_in_grams INTEGER NOT NULL,
   image_url TEXT,
   deleted BOOLEAN NOT NULL DEFAULT FALSE
