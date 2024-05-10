@@ -4,28 +4,22 @@
   "type": "object",
   "properties": {
     "sellerId": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "name": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "meatType": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "cutType": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "minPrice": {
-      "type": "integer",
-      "minimum": 0
+      "type": "integer"
     },
     "maxPrice": {
-      "type": "integer",
-      "minimum": 0
+      "type": "integer"
     }
   },
   "additionalProperties": false,
