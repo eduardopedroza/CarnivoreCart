@@ -19,6 +19,7 @@ const orderUpdateSchema = require("../schemas/orderUpdateSchema.json");
  */
 router.post("/create", async (req, res, next) => {
   try {
+    console.log(req.body);
     const validator = jsonschema.validate(req.body, orderNewSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
