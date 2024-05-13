@@ -97,7 +97,7 @@ class CCApi {
   }
 
   static async getProduct(productId) {
-    let res = await this.request(`products/${productId}`);
+    let res = await this.request(`products/${productId}`, {}, "get", false);
     return res.product;
   }
   static async updateProduct(productId, data) {
