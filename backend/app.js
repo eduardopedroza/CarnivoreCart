@@ -2,6 +2,7 @@ const express = require("express");
 
 const { NotFoundError } = require("./expressError");
 
+const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const productsRoutes = require("./routes/products");
@@ -17,12 +18,13 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-app.use("/users", usersRoutes);
-app.use("/products", productsRoutes);
-app.use("/orders", ordersRoutes);
-app.use("/reviews", reviewsRoutes);
-app.use("/sellers", sellersRoutes);
-app.use("/payment", paymentRoutes);
+
+app.use("/users", authenticateJWT, usersRoutes);
+app.use("/products", authenticateJWT, productsRoutes);
+app.use("/orders", authenticateJWT, ordersRoutes);
+app.use("/reviews", authenticateJWT, reviewsRoutes);
+app.use("/sellers", authenticateJWT, sellersRoutes);
+app.use("/payment", authenticateJWT, paymentRoutes);
 
 /** Handle 404 errors */
 app.use(function (req, res, next) {
