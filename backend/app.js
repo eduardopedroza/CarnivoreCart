@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-
+app.use(authenticateJWT);
 app.use("/users", authenticateJWT, usersRoutes);
 app.use("/products", authenticateJWT, productsRoutes);
 app.use("/orders", authenticateJWT, ordersRoutes);
